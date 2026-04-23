@@ -1,9 +1,8 @@
 .header {
   height: 44px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #343435;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   flex-direction: row;
   position: fixed;
   top: 0;
@@ -15,9 +14,31 @@
   backdrop-filter: blur(10px);
 }
 
+.sideLine {
+  width: 40px;
+  flex-shrink: 0;
+  border-left: 1px solid #343435;
+  border-right: 1px solid #343435;
+}
+
+.sideLine:first-child {
+  border-left: none;
+}
+
+.sideLine:last-child {
+  border-right: none;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
 /* Logo */
 .logo {
-  width: 43px;
+  width: 44px;
   height: 44px;
   background: #ffffff;
   display: flex;
@@ -38,7 +59,7 @@
   flex-direction: row;
   align-items: center;
   gap: 16px;
-  margin-left: 20px;
+  padding-left: 20px;
 }
 
 .navLink {
@@ -76,6 +97,7 @@
   background: rgba(132, 224, 247, 0.1);
   cursor: pointer;
   transition: background 0.2s ease;
+  border-left: 1px solid #343435;
 }
 
 .docsBtn:hover {
@@ -121,6 +143,10 @@
 
 /* Mobile */
 @media (max-width: 768px) {
+  .sideLine {
+    display: none;
+  }
+
   .nav {
     display: none;
   }

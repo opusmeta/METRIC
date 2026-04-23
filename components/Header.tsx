@@ -35,52 +35,56 @@ export default function Header() {
 
   return (
     <header className={styles.header}>
-      {/* Logo */}
-      <a 
-        href="/" 
-        className={styles.logo} 
-        aria-label="Metric Home"
-        onClick={(e) => {
-          e.preventDefault();
-          gsap.to(window, { duration: 1.5, scrollTo: 0, ease: 'expo.inOut' });
-        }}
-      >
-        <Image
-          src="/metriclp_biglogo.svg"
-          alt="Metric Logo"
-          width={24}
-          height={24}
-          priority
-        />
-      </a>
+      <div className={styles.sideLine} />
+      <div className={styles.mainContent}>
+        {/* Logo */}
+        <a 
+          href="/" 
+          className={styles.logo} 
+          aria-label="Metric Home"
+          onClick={(e) => {
+            e.preventDefault();
+            gsap.to(window, { duration: 1.5, scrollTo: 0, ease: 'expo.inOut' });
+          }}
+        >
+          <Image
+            src="/metriclp_biglogo.svg"
+            alt="Metric Logo"
+            width={24}
+            height={24}
+            priority
+          />
+        </a>
 
-      {/* Navigation */}
-      <nav className={styles.nav} aria-label="Main navigation">
-        {navLinks.map((link) => (
-          <a 
-            key={link.href} 
-            href={link.href} 
-            className={styles.navLink}
-            onClick={(e) => handleScroll(e, link.targetId)}
-          >
-            <ScrambleText text={link.label} trigger="hover" />
+        {/* Navigation */}
+        <nav className={styles.nav} aria-label="Main navigation">
+          {navLinks.map((link) => (
+            <a 
+              key={link.href} 
+              href={link.href} 
+              className={styles.navLink}
+              onClick={(e) => handleScroll(e, link.targetId)}
+            >
+              <ScrambleText text={link.label} trigger="hover" />
+            </a>
+          ))}
+        </nav>
+
+        {/* Action buttons */}
+        <div className={styles.actions}>
+          <a href="/docs" className={styles.docsBtn} aria-label="Documentation">
+            <span className={styles.docsText}>
+              <ScrambleText text="Docs" trigger="hover" />
+            </span>
           </a>
-        ))}
-      </nav>
-
-      {/* Action buttons */}
-      <div className={styles.actions}>
-        <a href="/docs" className={styles.docsBtn} aria-label="Documentation">
-          <span className={styles.docsText}>
-            <ScrambleText text="Docs" trigger="hover" />
-          </span>
-        </a>
-        <a href="/app" className={styles.launchBtn} aria-label="Launch App">
-          <span className={styles.launchText}>
-            <ScrambleText text="Launch app" trigger="hover" />
-          </span>
-        </a>
+          <a href="/app" className={styles.launchBtn} aria-label="Launch App">
+            <span className={styles.launchText}>
+              <ScrambleText text="Launch app" trigger="hover" />
+            </span>
+          </a>
+        </div>
       </div>
+      <div className={styles.sideLine} />
     </header>
   );
 }
