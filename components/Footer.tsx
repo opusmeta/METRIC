@@ -1,7 +1,33 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useRef } from 'react';
 import styles from './Footer.module.css';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function Footer() {
+  const logoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (logoRef.current) {
+      gsap.from(logoRef.current, {
+        y: 100,
+        opacity: 0,
+        duration: 2,
+        ease: 'expo.out',
+        scrollTrigger: {
+          trigger: logoRef.current,
+          start: 'top 95%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
+  }, []);
+
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -47,7 +73,7 @@ export default function Footer() {
               <img src="/all_rights_reserved.svg" alt="All rights reserved" className={styles.infoIcon} />
               <span className={styles.infoText}>ALL RIGHTS RESERVED.</span>
             </div>
-            <div className={styles.bigLogoWrapper}>
+            <div className={styles.bigLogoWrapper} ref={logoRef}>
               <img src="/big_logo_footer_desk.svg" alt="Metric Logo" className={styles.bigLogoDesktop} />
               <img src="/big_logo_footer_mobile.svg" alt="Metric Logo" className={styles.bigLogoMobile} />
             </div>

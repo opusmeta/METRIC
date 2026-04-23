@@ -17,12 +17,20 @@ export default function Home() {
       <Header />
       <Hero />
       <BackedBy />
-      <IpadSection />
+      <div id="the-setup">
+        <IpadSection />
+      </div>
       <ProblemSection />
       <TextRevealSection />
-      <MechanicsSection />
-      <WhyMetricWins />
-      <CoverageSection />
+      <div id="how-it-works">
+        <MechanicsSection />
+      </div>
+      <div id="why-metric-wins">
+        <WhyMetricWins />
+      </div>
+      <div id="integrations">
+        <CoverageSection />
+      </div>
       <GraphicDivider />
       <Footer />
     </main>
