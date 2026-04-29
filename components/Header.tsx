@@ -74,12 +74,12 @@ export default function Header() {
         <div className={styles.actions}>
           <a href="/docs" className={styles.docsBtn} aria-label="Documentation">
             <span className={styles.docsText}>
-              <ScrambleText text="Docs" trigger="hover" />
+              <ScrambleText text="Docs" trigger="hover" speed={0.25} />
             </span>
           </a>
           <a href="/app" className={styles.launchBtn} aria-label="Launch App">
             <span className={styles.launchText}>
-              <ScrambleText text="Launch app" trigger="hover" />
+              <ScrambleText text="Launch app" trigger="hover" speed={0.5} />
             </span>
           </a>
         </div>

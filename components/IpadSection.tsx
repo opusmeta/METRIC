@@ -50,7 +50,7 @@ export default function IpadSection() {
         {/* Launch App Button fixed to bottom right of the bg container on desktop, full width below on mobile */}
         <div className={styles.launchAppWrapper}>
           <a href="/app" className={styles.launchAppBtn}>
-            <ScrambleText text="LAUNCH APP" trigger="hover" />
+            <ScrambleText text="LAUNCH APP" trigger="hover" speed={0.5} />
           </a>
         </div>
       </div>

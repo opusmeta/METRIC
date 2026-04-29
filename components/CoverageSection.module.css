@@ -90,6 +90,11 @@
   align-items: center;
 }
 
+.riveIcon {
+  width: 100%;
+  height: 100%;
+}
+
 .iconCross1,
 .iconCross2 {
   position: absolute;
@@ -165,11 +170,9 @@
   left: 0;
   width: 100%;
   height: 24px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   z-index: 1;
   border-top: 1px solid #343435;
+  overflow: hidden;
 }
 
 @media (max-width: 1320px) {

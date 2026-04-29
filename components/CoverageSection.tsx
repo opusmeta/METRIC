@@ -1,9 +1,9 @@
-"use client";
-
 import React from 'react';
+import Image from 'next/image';
 import ScrambleText from './ScrambleText';
 import styles from './CoverageSection.module.css';
 import SectionDivider from './SectionDivider';
+import RiveAnimation from './RiveAnimation';
 
 interface CoverageCardProps {
   title: string;
@@ -11,10 +11,9 @@ interface CoverageCardProps {
   icons: string[];
   color?: string;
   bottomBg?: string;
-  iconSrc?: string;
 }
 
-const CoverageCard: React.FC<CoverageCardProps> = ({ title, artboard, icons, color = '#FCFCF4', bottomBg, iconSrc }) => {
+const CoverageCard: React.FC<CoverageCardProps> = ({ title, artboard, icons, color = '#FCFCF4', bottomBg }) => {
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
@@ -22,7 +21,11 @@ const CoverageCard: React.FC<CoverageCardProps> = ({ title, artboard, icons, col
           <div className={styles.iconCross1} />
           <div className={styles.iconCross2} />
           <div className={styles.riveContainer}>
-            {iconSrc && <img src={iconSrc} alt="" style={{ width: '100%', height: '100%' }} />}
+            <RiveAnimation 
+              src="/assets/animations/metric_-_everything_onchain_priced_to_reality.riv"
+              artboard={artboard}
+              className={styles.riveIcon}
+            />
           </div>
         </div>
       </div>
@@ -31,7 +34,13 @@ const CoverageCard: React.FC<CoverageCardProps> = ({ title, artboard, icons, col
         <div className={styles.smallIconsRow}>
           {icons.map((icon, i) => (
             <div key={i} className={styles.smallIconBox}>
-              <img src={icon} alt="token" className={styles.smallIcon} />
+              <Image 
+                src={icon} 
+                alt="token" 
+                width={40} 
+                height={40} 
+                className={styles.smallIcon} 
+              />
             </div>
           ))}
         </div>
@@ -42,10 +51,17 @@ const CoverageCard: React.FC<CoverageCardProps> = ({ title, artboard, icons, col
       <div className={styles.diagonalBg} />
       
       {/* Bottom decorative bar */}
-      <div 
-        className={styles.bottomBar} 
-        style={{ backgroundImage: bottomBg ? `url(${bottomBg})` : 'none' }}
-      />
+      {bottomBg && (
+        <div className={styles.bottomBar}>
+          <Image
+            src={bottomBg}
+            alt=""
+            fill
+            sizes="25vw"
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -61,35 +77,31 @@ export const CoverageSection: React.FC = () => {
   const features = [
     {
       title: 'commodities/FX',
-      artboard: 'Commodities',
+      artboard: 'commodities/FX',
       icons: cryptoIcons,
       color: '#FCFCF4',
       bottomBg: '/card_bg/firstcard_backg.png',
-      iconSrc: '/anim_icons_4cards/white_container.svg'
     },
     {
       title: 'equities/RWAs',
-      artboard: 'Equities',
+      artboard: 'equities/RWAs',
       icons: cryptoIcons,
       color: '#84E0F7',
       bottomBg: '/card_bg/secondcard_backg.png',
-      iconSrc: '/anim_icons_4cards/blue_container.svg'
     },
     {
       title: 'majors + tokenized',
-      artboard: 'Majors',
+      artboard: 'majors + tokenized',
       icons: cryptoIcons,
       color: '#3DB1CF',
       bottomBg: '/card_bg/thirdcard_backg.png',
-      iconSrc: '/anim_icons_4cards/fq_container.svg'
     },
     {
       title: 'options/prediction',
-      artboard: 'Options',
+      artboard: 'options/prediction',
       icons: cryptoIcons,
       color: '#0096BA',
       bottomBg: '/card_bg/fourthcard_backg.png',
-      iconSrc: '/anim_icons_4cards/ueue_container.svg'
     }
   ];
 
@@ -125,3 +137,4 @@ export const CoverageSection: React.FC = () => {
     </section>
   );
 };
+

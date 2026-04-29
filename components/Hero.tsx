@@ -58,12 +58,12 @@ export default function Hero() {
         <div className={styles.buttons}>
           <a href="/docs" className={styles.docBtn}>
             <span className={styles.docBtnText}>
-              <ScrambleText text="Doc" trigger="hover" />
+              <ScrambleText text="Doc" trigger="hover" speed={0.25} />
             </span>
           </a>
           <a href="/app" className={styles.launchBtn}>
             <span className={styles.launchBtnText}>
-              <ScrambleText text="Launch app" trigger="hover" />
+              <ScrambleText text="Launch app" trigger="hover" speed={0.5} />
             </span>
           </a>
         </div>

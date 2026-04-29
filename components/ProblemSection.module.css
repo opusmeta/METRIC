@@ -13,7 +13,8 @@
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 140px; /* Stick near top of viewport */
+  top: 140px;
+  /* Stick near top of viewport */
   height: fit-content;
 }
 
@@ -31,7 +32,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px; /* Gap between cards */
+  gap: 24px;
+  /* Gap between cards */
 }
 
 .card {
@@ -51,20 +53,33 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 250px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  pointer-events: none; /* Let clicks pass through */
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
 }
 
 .riveCanvas {
-  /* Give it a fixed size where the circle takes most of the space */
-  width: 500px;
-  height: 500px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1500px;
+  height: 1500px;
   flex-shrink: 0;
-  /* Translate Y by -50% to put the center of the canvas on the top border of the card */
-  transform: translateY(-50%);
+  will-change: transform;
+}
+
+/* Individual adjustments for artboard inconsistencies */
+.card:nth-child(1) .riveCanvas {
+  margin-top: 0px;
+}
+
+.card:nth-child(2) .riveCanvas {
+  margin-top: 10px;
+}
+
+.card:nth-child(3) .riveCanvas {
+  margin-top: 0px;
 }
 
 .textWrapper {
@@ -96,13 +111,17 @@
   line-height: 1.3;
 }
 
+.cardTextSmall {
+  font-size: 24px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .section {
     flex-direction: column;
     padding: 60px 20px;
   }
-  
+
   .leftCol {
     position: relative;
     top: 0;
@@ -121,7 +140,7 @@
   .cardText {
     font-size: 20px;
   }
-  
+
   .textWrapper {
     padding: 30px 20px;
   }
@@ -150,24 +169,51 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes dashMove {
-  from { stroke-dashoffset: 0; }
-  to { stroke-dashoffset: 1000; }
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: 1000;
+  }
 }
 
-.pulse, .pulseDelay1, .pulseDelay2, .pulseDelay3 {
+.pulse,
+.pulseDelay1,
+.pulseDelay2,
+.pulseDelay3 {
   transform-box: fill-box;
   transform-origin: center;
 }
 
-.pulse { animation: pulseAnim 3s ease-in-out infinite; }
-.pulseDelay1 { animation: pulseAnim 3s ease-in-out infinite; animation-delay: 0.5s; }
-.pulseDelay2 { animation: pulseAnim 3s ease-in-out infinite; animation-delay: 1.0s; }
-.pulseDelay3 { animation: pulseAnim 3s ease-in-out infinite; animation-delay: 1.5s; }
+.pulse {
+  animation: pulseAnim 3s ease-in-out infinite;
+}
+
+.pulseDelay1 {
+  animation: pulseAnim 3s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.pulseDelay2 {
+  animation: pulseAnim 3s ease-in-out infinite;
+  animation-delay: 1.0s;
+}
+
+.pulseDelay3 {
+  animation: pulseAnim 3s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
 
 .pulseSlow {
   animation: pulseAnim 6s ease-in-out infinite;
@@ -176,36 +222,88 @@
 }
 
 @keyframes pulseAnim {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
 }
 
 .floatY {
   animation: floatYAnim 6s ease-in-out infinite;
 }
+
 .floatYDelay {
   animation: floatYAnim 6s ease-in-out infinite;
   animation-delay: 3s;
 }
 
 @keyframes floatYAnim {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
-.ripple1 { animation: rippleAnim 4s linear infinite; animation-delay: 0s; }
-.ripple2 { animation: rippleAnim 4s linear infinite; animation-delay: 0.8s; }
-.ripple3 { animation: rippleAnim 4s linear infinite; animation-delay: 1.6s; }
-.ripple4 { animation: rippleAnim 4s linear infinite; animation-delay: 2.4s; }
-.ripple5 { animation: rippleAnim 4s linear infinite; animation-delay: 3.2s; }
+.ripple1 {
+  animation: rippleAnim 4s linear infinite;
+  animation-delay: 0s;
+}
+
+.ripple2 {
+  animation: rippleAnim 4s linear infinite;
+  animation-delay: 0.8s;
+}
+
+.ripple3 {
+  animation: rippleAnim 4s linear infinite;
+  animation-delay: 1.6s;
+}
+
+.ripple4 {
+  animation: rippleAnim 4s linear infinite;
+  animation-delay: 2.4s;
+}
+
+.ripple5 {
+  animation: rippleAnim 4s linear infinite;
+  animation-delay: 3.2s;
+}
 
 @keyframes rippleAnim {
-  0% { transform: scale(0.9); opacity: 0; }
-  20% { opacity: 0.8; }
-  80% { opacity: 0.2; }
-  100% { transform: scale(1.05); opacity: 0; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.8;
+  }
+
+  80% {
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: scale(1.05);
+    opacity: 0;
+  }
 }
 
 .flyThrough {
@@ -222,8 +320,22 @@
 }
 
 @keyframes flyThroughAnim {
-  0% { transform: translateY(-40px) scale(1.1); opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; transform: translateY(80px) scale(0.3); }
-  100% { transform: translateY(100px) scale(0.1); opacity: 0; }
+  0% {
+    transform: translateY(-40px) scale(1.1);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateY(80px) scale(0.3);
+  }
+
+  100% {
+    transform: translateY(100px) scale(0.1);
+    opacity: 0;
+  }
 }

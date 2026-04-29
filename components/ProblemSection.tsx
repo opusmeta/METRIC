@@ -4,27 +4,24 @@ import React from 'react';
 import styles from './ProblemSection.module.css';
 import SectionDivider from './SectionDivider';
 import ScrambleText from './ScrambleText';
-
-import Card1Animation from './Card1Animation';
-import Card3Animation from './Card3Animation';
-import Card4Animation from './Card4Animation';
+import RiveAnimation from './RiveAnimation';
 
 export default function ProblemSection() {
   const cards = [
     {
       number: '01',
       text: 'For majors + tokenized equities/RWAs, the real price is set off-chain — on major exchanges and regulated markets.',
-      AnimationComponent: Card1Animation,
+      artboard: '01',
     },
     {
       number: '02',
       text: 'Yet AMMs still try to discover price inside the pool. When markets move, the pool goes stable.',
-      AnimationComponent: Card3Animation,
+      artboard: '02',
     },
     {
       number: '03',
       text: 'Arbitrage re-aligns the pool — LPs pay for it. “Incentives” may inflate headline APR, but they don’t cover the leakage.',
-      AnimationComponent: Card4Animation,
+      artboard: '03',
     },
   ];
 
@@ -43,12 +40,18 @@ export default function ProblemSection() {
           {cards.map((card, idx) => (
             <div key={idx} className={styles.card}>
               <div className={styles.animationWrapper}>
-                <card.AnimationComponent />
+                <RiveAnimation 
+                  src="/assets/animations/metric_-_the_setup.riv"
+                  artboard={card.artboard}
+                  className={styles.riveCanvas}
+                />
               </div>
               
               <div className={styles.textWrapper}>
                 <span className={styles.cardNumber}>{card.number}</span>
-                <p className={styles.cardText}>{card.text}</p>
+                <p className={card.number === '03' ? `${styles.cardText} ${styles.cardTextSmall}` : styles.cardText}>
+                  {card.text}
+                </p>
               </div>
             </div>
           ))}

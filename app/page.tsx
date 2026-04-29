@@ -9,11 +9,13 @@ import WhyMetricWins from '@/components/WhyMetricWins';
 import { CoverageSection } from '@/components/CoverageSection';
 import GraphicDivider from '@/components/GraphicDivider';
 import Footer from '@/components/Footer';
+import ScrollOptimizer from '@/components/ScrollOptimizer';
 import styles from './page.module.css';
 
 export default function Home() {
   return (
     <main className={styles.main}>
+      <ScrollOptimizer />
       <Header />
       <Hero />
       <BackedBy />

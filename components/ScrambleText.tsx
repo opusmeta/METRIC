@@ -8,9 +8,15 @@ interface ScrambleTextProps {
   text: string;
   trigger?: 'hover' | 'scroll';
   className?: string;
+  speed?: number;
 }
 
-export default function ScrambleText({ text, trigger = 'hover', className = '' }: ScrambleTextProps) {
+export default function ScrambleText({ 
+  text, 
+  trigger = 'hover', 
+  className = '',
+  speed = 1
+}: ScrambleTextProps) {
   const [displayText, setDisplayText] = useState(text);
   const containerRef = useRef<HTMLSpanElement>(null);
   const frameRef = useRef<number>(0);
@@ -36,8 +42,8 @@ export default function ScrambleText({ text, trigger = 'hover', className = '' }
       });
 
       // Increase iteration. The smaller the number, the slower the decode.
-      // Slowed down by 20%
-      iterationRef.current += 1 / 3.75;
+      // 1 / 7.5 is base speed. Multiplying by speed prop.
+      iterationRef.current += (1 / 7.5) * speed;
 
       if (iterationRef.current < text.length) {
         frameRef.current = requestAnimationFrame(animate);
