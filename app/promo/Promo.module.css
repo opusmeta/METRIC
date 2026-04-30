@@ -8,4 +8,7 @@
   flex-direction: column;
   z-index: 9999;
   overflow: hidden;
+  height: 100vh;
+  height: -webkit-fill-available; /* Fix for mobile browser bars */
+  touch-action: none;
 }

@@ -33,6 +33,13 @@ export default function PromoPage() {
     return () => clearInterval(interval);
   }, [isCornersReady]);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
     <main className={styles.promoWrapper}>
       {!showContent && (
