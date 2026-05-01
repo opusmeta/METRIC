@@ -54,13 +54,16 @@ export default function PromoPage() {
       });
 
       // 2. Spread arrows AND trigger manifestation with a delay
+      const isMobile = window.innerWidth <= 768;
+      const targetOffset = isMobile ? 32 : 135;
+
       tl.to(arrowLeftRef.current, { 
-        x: () => -(window.innerWidth / 2) + 32, 
+        x: () => -(window.innerWidth / 2) + targetOffset, 
         duration: 2.5, 
         ease: 'expo.inOut'
       });
       tl.to(arrowRightRef.current, { 
-        x: () => (window.innerWidth / 2) - 32, 
+        x: () => (window.innerWidth / 2) - targetOffset, 
         duration: 2.5, 
         ease: 'expo.inOut' 
       }, "<");
