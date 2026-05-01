@@ -8,15 +8,14 @@
   perspective: 1200px;
 }
 
-/* Large centered logo */
-.logoContainer {
+/* Large centered torus logo */
+.torusLogoContainer {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70%;
-  max-width: 700px;
-  aspect-ratio: 1;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,19 +23,20 @@
   z-index: 0;
 }
 
-/* Inner wrapper — GSAP animates this, not the container */
-.logoInner {
-  width: 100%;
-  height: 100%;
+/* Inner wrapper — GSAP animates this */
+.torusLogoInner {
+  width: 526px;
+  height: 526px;
   will-change: transform;
   transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.logoContainer img,
-.logoContainer svg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.torusLogoContainer canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* Left content block */
@@ -152,15 +152,21 @@
     align-items: flex-start;
   }
 
-  .logoContainer {
+  .torusLogoContainer {
     position: relative;
     top: auto;
     left: auto;
     transform: none;
     width: 100%;
     max-width: 100%;
+    height: 300px;
     margin: 20px 0;
     order: 2;
+  }
+
+  .torusLogoInner {
+    width: 300px;
+    height: 300px;
   }
 
   .leftContent {

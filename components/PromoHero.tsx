@@ -132,12 +132,9 @@ export default function PromoHero({ shouldManifest = false }: { shouldManifest?:
 
       {/* Logo & Desktop Title Section */}
       <div className={styles.logoSection} ref={headerRef}>
-        <Image
-          src="/pre_white_logo.svg"
-          alt="Metric Logo"
-          width={48}
-          height={48}
-        />
+        <div className={styles.torusLogoWrapper}>
+          <TorusScene shouldManifest={shouldManifest} />
+        </div>
         <h1 className={`${styles.mainTitle} ${styles.desktopOnly}`} ref={mainTitleRef}>
           {splitText("EVERYTHING ONCHAIN")}
           <br />

@@ -40,9 +40,11 @@ export default function Hero() {
   return (
     <section className={styles.hero} ref={sectionRef}>
 
-      {/* Animated Logo Container */}
-      <div className={styles.logoContainer}>
-        <AnimatedLogo hoverTargetRef={sectionRef} logoInnerRef={logoInnerRef} />
+      {/* Torus Logo Container */}
+      <div className={styles.torusLogoContainer}>
+        <div className={styles.torusLogoInner} ref={logoInnerRef}>
+          <TorusScene shouldManifest={true} />
+        </div>
       </div>
 
       {/* Left content */}
