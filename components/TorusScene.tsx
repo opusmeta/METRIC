@@ -15,7 +15,7 @@ import GUI from 'lil-gui';
 import Stats from 'stats.js';
 
 
-export default function TorusScene({ shouldManifest = true }: { shouldManifest?: boolean }) {
+export default function TorusScene() {
     useEffect(() => {
         let isDestroyed = false;
 
@@ -1413,16 +1413,6 @@ function triggerManifestation() {
             allDone = false;
         }
 
-        // Update scale along with progress
-        // Total duration is roughly (end - start) / baseSpeed
-        const totalDist = end - start;
-        const currentDist = params._torusRevealProgress - start;
-        const progressFactor = Math.min(1.0, Math.max(0.0, currentDist / totalDist));
-        
-        // Target scale from params
-        const targetScale = isMobile ? 0.16 : 0.3891;
-        params.modelScale = targetScale * progressFactor;
-
         // Update uniforms
         params.revealProgress = params._torusRevealProgress;
         uniforms.uRevealProgress.value = params._torusRevealProgress;
@@ -1433,7 +1423,6 @@ function triggerManifestation() {
             (window as any).revealAnimId = requestAnimationFrame(animateReveal);
         } else {
             params.revealProgress = end;
-            params.modelScale = targetScale; // Ensure final scale is exact
             uniforms.uRevealProgress.value = end;
             uniforms.uHaloRevealProgress.value = end;
             uniforms.uInnerFlareRevealProgress.value = end;
@@ -1869,20 +1858,11 @@ function initGui() {
     gui.add(params, 'togglePerformanceGraph').name('📈 Toggle Perf Graph');
 }
 
-// Initial setup
+// Initial load
 initGui();
 rebuildRover();
 updateModelBounds();
-
-// Set initial scale to 0 if we are waiting for manifestation
-params.modelScale = shouldManifest ? (isMobile ? 0.16 : 0.3891) : 0;
-
-if (shouldManifest) {
-    setTimeout(triggerManifestation, 500);
-}
-
-// Watch for manual trigger
-(window as any).triggerTorusManifest = triggerManifestation;
+setTimeout(triggerManifestation, 500);
 
 animate();
 
@@ -1909,16 +1889,6 @@ animate();
     return (
         <div style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }}>
             <canvas id="app-canvas" style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'auto' }} />
-            <ManifestWatcher shouldManifest={shouldManifest} />
         </div>
     );
-}
-
-function ManifestWatcher({ shouldManifest }: { shouldManifest: boolean }) {
-    useEffect(() => {
-        if (shouldManifest && (window as any).triggerTorusManifest) {
-            (window as any).triggerTorusManifest();
-        }
-    }, [shouldManifest]);
-    return null;
 }

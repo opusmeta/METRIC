@@ -23,6 +23,7 @@ export default function PromoLoader({
   const loadingAreaRef = useRef<HTMLDivElement>(null);
   const cubeLeftRef = useRef<HTMLDivElement>(null);
   const cubeRightRef = useRef<HTMLDivElement>(null);
+  const arrowsRef = useRef<HTMLDivElement[]>([]);
   
   const animatedRef = useRef(false);
 
@@ -76,15 +77,22 @@ export default function PromoLoader({
 
       // 3. Corners fly to center and transform
       tl.to(cornersRef.current, {
-        x: (i: number) => (i % 2 === 0 ? 396 : -396),
-        y: (i: number) => (i < 2 ? 60 : -20),
+        x: (i) => (i % 2 === 0 ? 396 : -396),
+        y: (i) => (i < 2 ? 60 : -20),
         opacity: 0,
         duration: 0.8,
         ease: 'expo.inOut'
       }, "<");
 
-      // Signal parent that we are ready for the next stage
-      // No longer need to handle arrows here
+      tl.set(arrowsRef.current, { opacity: 1, scale: 0 });
+      tl.to(arrowsRef.current, {
+        scale: 1,
+        duration: 0.3,
+        ease: 'back.out(2)'
+      });
+
+      tl.to(arrowsRef.current[0], { x: -350, duration: 1, ease: 'expo.inOut' });
+      tl.to(arrowsRef.current[1], { x: 350, duration: 1, ease: 'expo.inOut' }, "<");
     }
   }, [isExiting, onExitComplete]);
 
@@ -97,7 +105,9 @@ export default function PromoLoader({
         <div ref={el => { if (el) cornersRef.current[2] = el; }} className={`${styles.corner} ${styles.bottomLeft}`} />
         <div ref={el => { if (el) cornersRef.current[3] = el; }} className={`${styles.corner} ${styles.bottomRight}`} />
 
-        {/* Transition Arrows moved to parent */}
+        {/* Transition Arrows */}
+        <div ref={el => { if (el) arrowsRef.current[0] = el; }} className={styles.arrowLeft}>⊢</div>
+        <div ref={el => { if (el) arrowsRef.current[1] = el; }} className={styles.arrowRight}>⊣</div>
 
         <div className={styles.topRow} ref={brandRef}>
           <div className={styles.brand}>
