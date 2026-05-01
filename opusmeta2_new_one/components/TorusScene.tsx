@@ -11,11 +11,11 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import GUI from 'lil-gui';
+
 import Stats from 'stats.js';
 
 
-export default function TorusScene({ shouldManifest = true }: { shouldManifest?: boolean }) {
+export default function TorusScene() {
     useEffect(() => {
         let isDestroyed = false;
 
@@ -119,7 +119,7 @@ const params = {
     lightRadius: 1.189,
     lightIntensity: 2.7865,
     edgeThreshold: 1.8,
-    modelScale: isMobile ? 0.16 : 0.3891,
+    modelScale: 0.3891,
     bloomStrength: 0.165,
     bloomRadius: 0,
     bloomThreshold: 0.16,
@@ -237,7 +237,6 @@ const params = {
     torusClipFlip: false
 };
 
-// GUI setup moved to initGui() at the bottom of the file
 
 // Remove loader after initialization
 window.addEventListener('load', () => {
@@ -248,39 +247,13 @@ window.addEventListener('load', () => {
 });
 
 
-// Detailed Performance Monitor Setup
-const perfMonitor = document.createElement('div');
-perfMonitor.id = 'perf-monitor';
-perfMonitor.innerHTML = `
-    <div class="perf-header">Detailed Performance</div>
-    <div class="perf-grid">
-        <div class="perf-item"><span class="perf-label">FPS</span><span class="perf-value" id="perf-fps">0</span></div>
-        <div class="perf-item"><span class="perf-label">Frame Time</span><span class="perf-value" id="perf-ms">0 ms</span></div>
-        <div class="perf-item"><span class="perf-label">Draw Calls</span><span class="perf-value" id="perf-calls">0</span></div>
-        <div class="perf-item"><span class="perf-label">Triangles</span><span class="perf-value" id="perf-triangles">0</span></div>
-        <div class="perf-item"><span class="perf-label">Geometries</span><span class="perf-value" id="perf-geometries">0</span></div>
-        <div class="perf-item"><span class="perf-label">Textures</span><span class="perf-value" id="perf-textures">0</span></div>
-    </div>
-`;
-document.body.appendChild(perfMonitor);
 
 let frameCount = 0;
-let lastFpsTime = performance.now();
+let lastFpsTime = 0;
 let fpsDisplayVisible = false;
+let perfFps: any = null, perfMs: any = null, perfCalls: any = null, perfTriangles: any = null, perfGeometries: any = null, perfTextures: any = null;
 
-const perfFps = document.getElementById('perf-fps');
-const perfMs = document.getElementById('perf-ms');
-const perfCalls = document.getElementById('perf-calls');
-const perfTriangles = document.getElementById('perf-triangles');
-const perfGeometries = document.getElementById('perf-geometries');
-const perfTextures = document.getElementById('perf-textures');
 
-const toggleStats = () => {
-    fpsDisplayVisible = !fpsDisplayVisible;
-    perfMonitor.style.display = fpsDisplayVisible ? 'block' : 'none';
-};
-
-params.togglePerformanceGraph = toggleStats;
 // Scene Setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -1413,16 +1386,6 @@ function triggerManifestation() {
             allDone = false;
         }
 
-        // Update scale along with progress
-        // Total duration is roughly (end - start) / baseSpeed
-        const totalDist = end - start;
-        const currentDist = params._torusRevealProgress - start;
-        const progressFactor = Math.min(1.0, Math.max(0.0, currentDist / totalDist));
-        
-        // Target scale from params
-        const targetScale = isMobile ? 0.16 : 0.3891;
-        params.modelScale = targetScale * progressFactor;
-
         // Update uniforms
         params.revealProgress = params._torusRevealProgress;
         uniforms.uRevealProgress.value = params._torusRevealProgress;
@@ -1433,7 +1396,6 @@ function triggerManifestation() {
             (window as any).revealAnimId = requestAnimationFrame(animateReveal);
         } else {
             params.revealProgress = end;
-            params.modelScale = targetScale; // Ensure final scale is exact
             uniforms.uRevealProgress.value = end;
             uniforms.uHaloRevealProgress.value = end;
             uniforms.uInnerFlareRevealProgress.value = end;
@@ -1648,8 +1610,7 @@ function animate() {
     const delta = clock.getDelta();
     const elapsedTime = clock.getElapsedTime();
 
-    // Update variables from GUI
-    uniforms.uLightRadius.value = params.lightRadius;
+        uniforms.uLightRadius.value = params.lightRadius;
     uniforms.uLightIntensity.value = params.lightIntensity;
 
     // Interaction
@@ -1809,80 +1770,10 @@ function animate() {
     }
 }
 
-// Final Initialization
-function initGui() {
-    const gui = new GUI({ title: 'Torus Tuner (Production)' });
-    
-    const colorsFolder = gui.addFolder('Colors');
-    colorsFolder.addColor(params, 'lineColor').name('Line Color (Base)').onChange((val: any) => uniforms.uLineColor.value.set(val));
-    colorsFolder.addColor(params, 'glowColor').name('Glow Color (Light)').onChange((val: any) => uniforms.uGlowColor.value.set(val));
-    colorsFolder.addColor(params, 'glowColor2').name('Glow Color 2 (Gradient)').onChange((val: any) => uniforms.uGlowColor2.value.set(val));
-    colorsFolder.addColor(params, 'cursorLightColor').name('Cursor Color').onChange((val: any) => uniforms.uCursorColor.value.set(val));
 
-    const bottomAnimFolder = gui.addFolder('Bottom Light Animation');
-    bottomAnimFolder.add(params, 'bottomLightAnimEnabled').name('Enable Animation');
-    bottomAnimFolder.add(params, 'bottomLightAnimSpeed', 0.0, 5.0).name('Anim Speed');
-    bottomAnimFolder.add(params, 'bottomLightAnimAmp', 0.0, 2.0).name('Anim Amplitude');
-
-    const localAnimFolder = gui.addFolder('Local Glow Animation');
-    localAnimFolder.add(params, 'localGlowAnimEnabled').name('Enable Animation');
-    localAnimFolder.add(params, 'localGlowAnimSpeed', 0.0, 5.0).name('Anim Speed');
-    localAnimFolder.add(params, 'localGlowAnimAmp', 0.0, 2.0).name('Anim Amplitude');
-
-    const flareAnimFolder = gui.addFolder('Inner Flare Animation');
-    flareAnimFolder.add(params, 'glowFlareAnimEnabled').name('Enable Animation');
-    flareAnimFolder.add(params, 'glowFlareAnimWobbleSpeed', 0.0, 5.0).name('Wobble Speed');
-    flareAnimFolder.add(params, 'glowFlareAnimWobbleAmp', 0.0, 0.5).name('Wobble Amp');
-    flareAnimFolder.add(params, 'glowFlareAnimPulseSpeed', 0.0, 5.0).name('Pulse Speed');
-    flareAnimFolder.add(params, 'glowFlareAnimPulseAmp', 0.0, 0.5).name('Pulse Amp');
-
-    const cameraFolder = gui.addFolder('Camera & Rotation');
-    cameraFolder.add(params, 'cameraZ', 1, 30).name('Camera Z').onChange((val: any) => { camera.position.z = val; });
-    cameraFolder.add(params, 'rotationXBase', -Math.PI, Math.PI).name('Base Tilt (X)');
-    cameraFolder.add(params, 'rotationZSpeed', 0, 0.5).name('Auto Rotation Speed');
-    cameraFolder.add(params, 'mouseLerp', 0.1, 10).name('Mouse Smoothness');
-    cameraFolder.add(params, 'rotationXMouse', 0, 2).name('Mouse X Sensitivity');
-    cameraFolder.add(params, 'rotationYMouse', 0, 2).name('Mouse Y Sensitivity');
-
-    const noiseFolder = gui.addFolder('Throat Noise');
-    noiseFolder.add(params, 'throatNoiseEnabled').name('Enable Noise');
-    noiseFolder.add(params, 'throatNoiseType', ['simplex', 'fbm', 'curl']).name('Noise Type');
-    noiseFolder.add(params, 'throatNoiseAmplitude', 0.0, 1.0).name('Amplitude');
-    noiseFolder.add(params, 'throatNoiseSpeed', 0.01, 3.0).name('Noise Speed');
-    noiseFolder.add(params, 'throatNoiseFrequency', 0.1, 10.0).name('Frequency');
-    noiseFolder.add(params, 'throatNoiseScale', 0.1, 10.0).name('Noise Scale');
-    
-    // --- Torus Clip Mask (full 3D plane) ---
-    const torusClipFolder = gui.addFolder('Torus Clip Mask');
-    torusClipFolder.add(params, 'torusClipEnabled').name('Enable Clip');
-    torusClipFolder.add(params, 'torusClipFlip').name('Flip Side');
-    torusClipFolder.add(params, 'torusClipFade', 0.0, 2.0).name('Clip Fade');
-    const clipPosFolder = torusClipFolder.addFolder('Plane Position');
-    clipPosFolder.add(params, 'torusClipX', -5.0, 5.0).name('Position X');
-    clipPosFolder.add(params, 'torusClipY', -5.0, 5.0).name('Position Y');
-    clipPosFolder.add(params, 'torusClipZ', -5.0, 5.0).name('Position Z');
-    const clipNormFolder = torusClipFolder.addFolder('Plane Normal (Direction)');
-    clipNormFolder.add(params, 'torusClipNX', -1.0, 1.0).name('Normal X');
-    clipNormFolder.add(params, 'torusClipNY', -1.0, 1.0).name('Normal Y');
-    clipNormFolder.add(params, 'torusClipNZ', -1.0, 1.0).name('Normal Z');
-    
-    gui.add(params, 'togglePerformanceGraph').name('📈 Toggle Perf Graph');
-}
-
-// Initial setup
-initGui();
 rebuildRover();
 updateModelBounds();
-
-// Set initial scale to 0 if we are waiting for manifestation
-params.modelScale = shouldManifest ? (isMobile ? 0.16 : 0.3891) : 0;
-
-if (shouldManifest) {
-    setTimeout(triggerManifestation, 500);
-}
-
-// Watch for manual trigger
-(window as any).triggerTorusManifest = triggerManifestation;
+setTimeout(triggerManifestation, 500);
 
 animate();
 
@@ -1909,16 +1800,6 @@ animate();
     return (
         <div style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }}>
             <canvas id="app-canvas" style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'auto' }} />
-            <ManifestWatcher shouldManifest={shouldManifest} />
         </div>
     );
-}
-
-function ManifestWatcher({ shouldManifest }: { shouldManifest: boolean }) {
-    useEffect(() => {
-        if (shouldManifest && (window as any).triggerTorusManifest) {
-            (window as any).triggerTorusManifest();
-        }
-    }, [shouldManifest]);
-    return null;
 }

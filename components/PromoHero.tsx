@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import styles from './PromoHero.module.css';
 import TorusScene from './TorusScene';
 
-export default function PromoHero() {
+export default function PromoHero({ shouldManifest = false }: { shouldManifest?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const mainTitleRef = useRef<HTMLHeadingElement>(null);
@@ -18,6 +18,8 @@ export default function PromoHero() {
   const comingSoonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!shouldManifest) return;
+
     const tl = gsap.timeline();
 
     // Reset initial states
@@ -28,14 +30,14 @@ export default function PromoHero() {
       y: 20 
     });
     
-    // On mobile, coming soon bar is at the top, so we slide it from further top
     gsap.set(comingSoonRef.current, { y: isMobile ? -100 : 100 });
     gsap.set(backgroundRef.current, { opacity: 0 });
+    gsap.set(coordsRef.current, { opacity: 0 });
 
-    // 1. Background Torus fades in
+    // 1. Background Torus fades in and expands (TorusScene handles its own internal reveal)
     tl.to(backgroundRef.current, {
       opacity: 1,
-      duration: 1.5,
+      duration: 1.0,
       ease: 'power2.out'
     });
 
@@ -43,25 +45,26 @@ export default function PromoHero() {
     tl.to([headerRef.current, mainTitleRef.current, subTitleRef.current, dashedLineRef.current, contentRef.current], {
       opacity: 1,
       y: 0,
-      duration: 1.5,
+      duration: 1.2,
       stagger: 0.1,
       ease: 'expo.out'
-    }, "-=1.5");
+    }, "-=0.5");
 
     // 3. Footer Bar slides up
     tl.to(comingSoonRef.current, {
       y: 0,
-      duration: 1.2,
+      duration: 1.0,
       ease: 'power4.out'
-    }, "-=0.8");
+    }, "-=1.0");
 
+    // 4. Coordinates (including internal arrows) fade in at the end of the spread
     tl.to(coordsRef.current, {
       opacity: 1,
-      duration: 1,
-      stagger: 0.2
-    }, "-=1");
+      duration: 0.8,
+      stagger: 0.1
+    }, "-=0.5");
 
-  }, []);
+  }, [shouldManifest]);
 
   return (
     <div className={styles.heroWrapper} ref={containerRef}>
@@ -71,7 +74,7 @@ export default function PromoHero() {
 
       {/* Background Layer for Torus */}
       <div className={styles.canvasBackground} ref={backgroundRef}>
-        <TorusScene />
+        <TorusScene shouldManifest={shouldManifest} />
         <div className={styles.torusGlow} />
       </div>
 

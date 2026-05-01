@@ -1,0 +1,11 @@
+node_modules
+.next
+.DS_Store
+.env*
+.vercel
+
+# Temporary scripts
+migrate.js
+optimize.js
+optimize_final.js
+fix.js
