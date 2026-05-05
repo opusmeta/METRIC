@@ -15,9 +15,6 @@ export default function PromoPage() {
   const [showContent, setShowContent] = useState(false);
   const [shouldManifest, setShouldManifest] = useState(false);
 
-  const arrowLeftRef = useRef<HTMLDivElement>(null);
-  const arrowRightRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!isCornersReady) return;
 
@@ -25,11 +22,9 @@ export default function PromoPage() {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          // Wait a bit at 100% then start exit
           setTimeout(() => setIsExiting(true), 500);
           return 100;
         }
-        // Random increments for a "real" feel
         const inc = Math.floor(Math.random() * 5) + 1;
         return Math.min(prev + inc, 100);
       });
@@ -38,60 +33,37 @@ export default function PromoPage() {
     return () => clearInterval(interval);
   }, [isCornersReady]);
 
-  // Handle the arrow spread and manifestation trigger
+  // Transition Logic: Start manifesting as soon as loader starts exiting
   useEffect(() => {
     if (isExiting) {
-      const tl = gsap.timeline();
-      
-      // 1. Initial appear of arrows (they start in center)
-      tl.set([arrowLeftRef.current, arrowRightRef.current], { opacity: 0, scale: 0, x: 0 });
-      tl.to([arrowLeftRef.current, arrowRightRef.current], { 
-        opacity: 1, 
-        scale: 1, 
-        duration: 0.5, 
-        delay: 0.8, // Match loader's corner fly time
-        ease: 'back.out(2)' 
-      });
-
-      // 2. Spread arrows AND trigger manifestation with a delay
-      const isMobile = window.innerWidth <= 768;
-      const targetOffset = isMobile ? 32 : 135;
-
-      tl.to(arrowLeftRef.current, { 
-        x: () => -(window.innerWidth / 2) + targetOffset, 
-        duration: 2.5, 
-        ease: 'expo.inOut'
-      });
-      tl.to(arrowRightRef.current, { 
-        x: () => (window.innerWidth / 2) - targetOffset, 
-        duration: 2.5, 
-        ease: 'expo.inOut' 
-      }, "<");
-
-      // Trigger manifestation and content visibility after arrows have spread a bit
-      tl.call(() => {
-        setShouldManifest(true);
+      setShouldManifest(true);
+      // Wait a bit before unmounting loader to ensure smooth fade
+      setTimeout(() => {
         setShowContent(true);
-      }, [], "+=1.2");
+      }, 2000); // Matched with manifestation speed
     }
   }, [isExiting]);
 
   return (
     <main className={styles.promoWrapper}>
-      {/* Persistent Transition Arrows */}
-      <div ref={arrowLeftRef} className={styles.arrowLeft}>⊢</div>
-      <div ref={arrowRightRef} className={styles.arrowRight}>⊣</div>
-
+      {/* Show loader until content is fully ready to take over */}
       {!showContent && (
-        <PromoLoader 
-          progress={progress} 
-          isExiting={isExiting}
-          onCornersReady={() => setIsCornersReady(true)}
-          // onExitComplete is no longer needed to trigger setShowContent here
-        />
+        <div style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          zIndex: isExiting ? 10 : 100, // Drop priority when exiting
+          pointerEvents: isExiting ? 'none' : 'auto'
+        }}>
+          <PromoLoader 
+            progress={progress} 
+            isExiting={isExiting}
+            onCornersReady={() => setIsCornersReady(true)}
+          />
+        </div>
       )}
 
-      {showContent && (
+      {/* Only mount Hero when it's time to animate, to save GPU resources */}
+      {(isExiting || showContent) && (
         <PromoHero shouldManifest={shouldManifest} />
       )}
     </main>

@@ -42,9 +42,7 @@ export default function Hero() {
 
       {/* Torus Logo Container */}
       <div className={styles.torusLogoContainer}>
-        <div className={styles.torusLogoInner} ref={logoInnerRef}>
-          <TorusScene shouldManifest={true} />
-        </div>
+          <TorusScene shouldManifest={true} debug={false} />
       </div>
 
       {/* Left content */}

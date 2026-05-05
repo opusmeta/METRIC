@@ -11,32 +11,20 @@
 /* Large centered torus logo */
 .torusLogoContainer {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 0;
-}
-
-/* Inner wrapper — GSAP animates this */
-.torusLogoInner {
-  width: 526px;
-  height: 526px;
-  will-change: transform;
-  transform-style: preserve-3d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent !important;
+  overflow: hidden;
 }
 
 .torusLogoContainer canvas {
   width: 100% !important;
   height: 100% !important;
+  background: transparent !important;
 }
 
 /* Left content block */

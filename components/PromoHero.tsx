@@ -39,23 +39,44 @@ export default function PromoHero({ shouldManifest = false }: { shouldManifest?:
     
     // Select all split characters
     const chars = containerRef.current?.querySelectorAll('.char');
-    if (!chars || chars.length === 0) return;
-    
-    gsap.set(chars, { 
-      opacity: 0, 
-      scale: 0.3,
-      y: 20,
-      transformOrigin: 'center center'
-    });
+    if (chars && chars.length > 0) {
+      gsap.set(chars, { 
+        opacity: 0, 
+        scale: 0.3,
+        y: 20,
+        transformOrigin: 'center center'
+      });
+    }
 
-    gsap.set([headerRef.current, dashedLineRef.current], { opacity: 0, y: 10 });
-    gsap.set(comingSoonRef.current, { y: isMobile ? -100 : 100, opacity: 0 });
-    gsap.set(backgroundRef.current, { opacity: 0 });
-    gsap.set(coordsRef.current, { opacity: 0 });
+    if (headerRef.current && dashedLineRef.current) {
+      gsap.set([headerRef.current, dashedLineRef.current], { opacity: 0, y: 10 });
+    }
+    if (comingSoonRef.current) {
+      gsap.set(comingSoonRef.current, { y: isMobile ? -100 : 100, opacity: 0 });
+    }
+    if (backgroundRef.current) {
+      gsap.set(backgroundRef.current, { opacity: 0 });
+    }
+    if (coordsRef.current && coordsRef.current.length > 0) {
+      // Start in the center, accounting for the padding to meet exactly at 50% width
+      const padding = isMobile ? 20 : 40;
+      gsap.set(coordsRef.current[0], { 
+        x: () => (window.innerWidth / 2) - padding - 12, 
+        opacity: 0 
+      });
+      gsap.set(coordsRef.current[1], { 
+        x: () => -(window.innerWidth / 2) + padding + 12, 
+        opacity: 0 
+      });
+    }
     
     // Initial state for side lines
-    gsap.set(sideLineLeftRef.current, { x: -50, opacity: 0 });
-    gsap.set(sideLineRightRef.current, { x: 50, opacity: 0 });
+    if (sideLineLeftRef.current) {
+      gsap.set(sideLineLeftRef.current, { x: -50, opacity: 0 });
+    }
+    if (sideLineRightRef.current) {
+      gsap.set(sideLineRightRef.current, { x: 50, opacity: 0 });
+    }
     
     // Initial state for connecting lines
     const connectingLines = containerRef.current?.querySelectorAll(`.${styles.connectingLine}`);
@@ -73,59 +94,78 @@ export default function PromoHero({ shouldManifest = false }: { shouldManifest?:
       gsap.set(rightLine, { transformOrigin: 'right center' });
     }
 
-    // 1. Background Torus fades in
-    tl.to(backgroundRef.current, {
-      opacity: 1,
-      duration: 1.2,
-      ease: 'power2.out'
-    });
+    // 0. Show the wrapper and initial set
+    if (containerRef.current) {
+      tl.to(containerRef.current, { opacity: 1, duration: 0.2 });
+    }
 
-    // 2. Side Lines slide in
-    tl.to([sideLineLeftRef.current, sideLineRightRef.current], {
-      x: 0,
-      opacity: 1,
-      duration: 1.2,
-      ease: 'expo.out'
-    }, "-=0.8");
-
-    // 3. Characters growth (Staggered left-to-right)
-    tl.to(chars, {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 1.0,
-      stagger: 0.02,
-      ease: 'back.out(1.7)'
-    }, "-=1.0");
-
-    // 4. Header & Dashed Line
-    tl.to([headerRef.current, dashedLineRef.current], {
-      opacity: 1,
-      y: 0,
-      duration: 1.0
-    }, "<");
-
-    // 5. Footer slide up
-    tl.to(comingSoonRef.current, {
-      y: 0,
-      opacity: 1,
-      duration: 1.5,
-      ease: 'expo.out'
-    }, "-=1.5");
-
-    // 6. Coordinates fade in & lines grow
-    tl.to(coordsRef.current, {
-      opacity: 1,
-      duration: 0.8,
-      stagger: 0.2
-    }, "-=0.8");
-
-    if (connectingLines && connectingLines.length > 0) {
-      tl.to(connectingLines, {
-        scaleX: 1,
+    // 1. Coordinates & Arrows appear in center and SPREAD (IMMEDIATE & FAST)
+    if (coordsRef.current && coordsRef.current.length > 0) {
+      tl.to(coordsRef.current, {
+        x: 0,
+        opacity: 1,
         duration: 1.2,
         ease: 'expo.out'
-      }, "<");
+      }, 0); // Start at time 0
+    }
+    
+    // 2. Background Torus fades in during the spread
+    if (backgroundRef.current) {
+      tl.to(backgroundRef.current, {
+        opacity: 1,
+        duration: 1.0,
+        ease: 'power2.out'
+      }, 0.1); // Fast fade in
+    }
+
+    // 3. Side Lines slide in
+    if (sideLineLeftRef.current && sideLineRightRef.current) {
+      tl.to([sideLineLeftRef.current, sideLineRightRef.current], {
+        x: 0,
+        opacity: 1,
+        duration: 1.0,
+        ease: 'expo.out'
+      }, 0.2);
+    }
+
+    // 4. Characters growth
+    if (chars && chars.length > 0) {
+      tl.to(chars, {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.01,
+        ease: 'back.out(1.7)'
+      }, 0.3);
+    }
+
+    // 5. Header & Logo
+    if (headerRef.current) {
+      tl.to(headerRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8
+      }, 0.4);
+    }
+
+    // 6. Footer slide up
+    if (comingSoonRef.current) {
+      tl.to(comingSoonRef.current, {
+        y: 0,
+        opacity: 1,
+        duration: 1.0,
+        ease: 'expo.out'
+      }, 0.5);
+    }
+
+    const targetLines = containerRef.current?.querySelectorAll(`.${styles.connectingLine}`);
+    if (targetLines && targetLines.length > 0) {
+      tl.to(targetLines, {
+        scaleX: 1,
+        duration: 1.0,
+        ease: 'expo.out'
+      }, 0.6);
     }
 
   }, [shouldManifest]);
@@ -145,7 +185,14 @@ export default function PromoHero({ shouldManifest = false }: { shouldManifest?:
       {/* Logo & Desktop Title Section */}
       <div className={styles.logoSection} ref={headerRef}>
         <div className={styles.torusLogoWrapper}>
-          <TorusScene shouldManifest={shouldManifest} />
+          <Image 
+            src="/pre_white_logo.svg" 
+            alt="Metric Logo" 
+            width={40} 
+            height={40} 
+            priority 
+            style={{ width: '100%', height: 'auto' }} 
+          />
         </div>
         <h1 className={`${styles.mainTitle} ${styles.desktopOnly}`} ref={mainTitleRef}>
           {splitText("EVERYTHING ONCHAIN")}
@@ -158,7 +205,7 @@ export default function PromoHero({ shouldManifest = false }: { shouldManifest?:
       <div className={styles.middleSection} ref={contentRef}>
         <div className={`${styles.coord} ${styles.coordLeft}`} ref={el => { if (el) coordsRef.current[0] = el; }}>
           <span className={`${styles.coordValue} ${styles.desktopOnly}`}>{splitText("X3.4553")}</span>
-          <span className={styles.arrowIcon} style={{ visibility: 'hidden' }}>⊢</span>
+          <span className={styles.arrowIcon}>⊢</span>
           <div className={`${styles.connectingLine} ${styles.desktopOnly}`} />
         </div>
 
@@ -166,7 +213,7 @@ export default function PromoHero({ shouldManifest = false }: { shouldManifest?:
 
         <div className={`${styles.coord} ${styles.coordRight}`} ref={el => { if (el) coordsRef.current[1] = el; }}>
           <div className={`${styles.connectingLine} ${styles.desktopOnly}`} />
-          <span className={styles.arrowIcon} style={{ visibility: 'hidden' }}>⊣</span>
+          <span className={styles.arrowIcon}>⊣</span>
           <span className={`${styles.coordValue} ${styles.desktopOnly}`}>{splitText("Y3.4553")}</span>
         </div>
       </div>

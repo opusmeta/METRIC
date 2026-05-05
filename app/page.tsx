@@ -45,63 +45,41 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [isCornersReady]);
 
-  // Transition Logic
+  // Transition Logic: Just handle the unmounting of loader after a delay
   useEffect(() => {
     if (isExiting) {
-      const tl = gsap.timeline();
-      
-      tl.set([arrowLeftRef.current, arrowRightRef.current], { opacity: 0, scale: 0, x: 0 });
-      tl.to([arrowLeftRef.current, arrowRightRef.current], { 
-        opacity: 1, 
-        scale: 1, 
-        duration: 0.5, 
-        delay: 0.8,
-        ease: 'back.out(2)' 
-      });
-
-      tl.to(arrowLeftRef.current, { 
-        x: () => -(window.innerWidth / 2) + 32, 
-        duration: 2.5, 
-        ease: 'expo.inOut'
-      });
-      tl.to(arrowRightRef.current, { 
-        x: () => (window.innerWidth / 2) - 32, 
-        duration: 2.5, 
-        ease: 'expo.inOut' 
-      }, "<");
-
-      tl.call(() => {
+      setTimeout(() => {
         setShowContent(true);
-      }, [], "+=1.2");
-      
-      // Fade out arrows eventually
-      tl.to([arrowLeftRef.current, arrowRightRef.current], {
-        opacity: 0,
-        duration: 1,
-        delay: 0.5
-      });
+      }, 2000); // Faster unmount now that animation is accelerated
     }
   }, [isExiting]);
 
   return (
     <main className={styles.main}>
-      {/* Transition Arrows */}
-      <div ref={arrowLeftRef} className={styles.arrowLeft}>⊢</div>
-      <div ref={arrowRightRef} className={styles.arrowRight}>⊣</div>
-
-      {!showContent && (
+      {/* Promo Experience: Loader and Hero integrated */}
+      <div className={styles.promoContainer}>
         <PromoLoader 
           progress={progress} 
           isExiting={isExiting}
           isLanding={true}
           onCornersReady={() => setIsCornersReady(true)}
         />
-      )}
 
-      <div style={{ visibility: showContent ? 'visible' : 'hidden' }}>
+        {/* PromoHero is rendered behind the loader and starts its animation when loader exits */}
+        <div style={{ 
+          position: 'absolute', 
+          inset: 0, 
+          visibility: (isExiting || showContent) ? 'visible' : 'hidden',
+          zIndex: (isExiting || showContent) ? 5 : -1 
+        }}>
+          <PromoHero shouldManifest={isExiting} />
+        </div>
+      </div>
+
+      <div style={{ visibility: showContent ? 'visible' : 'hidden', opacity: showContent ? 1 : 0, transition: 'opacity 1s ease' }}>
         <ScrollOptimizer />
         <Header />
-        <Hero />
+        {/* We keep the rest of the landing page content below */}
         <BackedBy />
         <div id="the-setup">
           <IpadSection />
