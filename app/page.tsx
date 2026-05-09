@@ -69,22 +69,10 @@ export default function Home() {
         </div>
       )}
 
-      {/* PromoHero handles its own manifestation. We keep it mounted during transition. */}
-      {(isExiting || showContent) && (
-        <div style={{ 
-          position: 'absolute', 
-          inset: 0, 
-          zIndex: showContent ? 1 : 10001, // Higher than loader during transition
-          pointerEvents: showContent ? 'auto' : 'none'
-        }}>
-          <PromoHero shouldManifest={isExiting} />
-        </div>
-      )}
-
       <div style={{ visibility: showContent ? 'visible' : 'hidden', opacity: showContent ? 1 : 0, transition: 'opacity 1s ease' }}>
         <ScrollOptimizer />
         <Header />
-        {/* We keep the rest of the landing page content below */}
+        <Hero />
         <BackedBy />
         <div id="the-setup">
           <IpadSection />
