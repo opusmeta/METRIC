@@ -15,6 +15,7 @@ import GraphicDivider from '@/components/GraphicDivider';
 import Footer from '@/components/Footer';
 import ScrollOptimizer from '@/components/ScrollOptimizer';
 import PromoLoader from '@/components/PromoLoader';
+import PromoHero from '@/components/PromoHero';
 import styles from './page.module.css';
 
 export default function Home() {
