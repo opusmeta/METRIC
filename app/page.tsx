@@ -58,24 +58,28 @@ export default function Home() {
   return (
     <main className={styles.main}>
       {/* Promo Experience: Loader and Hero integrated */}
-      <div className={styles.promoContainer}>
-        <PromoLoader 
-          progress={progress} 
-          isExiting={isExiting}
-          isLanding={true}
-          onCornersReady={() => setIsCornersReady(true)}
-        />
+      {!showContent && (
+        <div className={styles.promoContainer}>
+          <PromoLoader 
+            progress={progress} 
+            isExiting={isExiting}
+            isLanding={true}
+            onCornersReady={() => setIsCornersReady(true)}
+          />
+        </div>
+      )}
 
-        {/* PromoHero is rendered behind the loader and starts its animation when loader exits */}
+      {/* PromoHero handles its own manifestation. We keep it mounted during transition. */}
+      {(isExiting || showContent) && (
         <div style={{ 
           position: 'absolute', 
           inset: 0, 
-          visibility: (isExiting || showContent) ? 'visible' : 'hidden',
-          zIndex: (isExiting || showContent) ? 5 : -1 
+          zIndex: showContent ? 1 : 10001, // Higher than loader during transition
+          pointerEvents: showContent ? 'auto' : 'none'
         }}>
           <PromoHero shouldManifest={isExiting} />
         </div>
-      </div>
+      )}
 
       <div style={{ visibility: showContent ? 'visible' : 'hidden', opacity: showContent ? 1 : 0, transition: 'opacity 1s ease' }}>
         <ScrollOptimizer />
