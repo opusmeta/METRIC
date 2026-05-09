@@ -152,10 +152,17 @@
 }
 
 .layerBlue {
+  position: absolute;
+  top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   background-color: #84E0F7;
-  z-index: 1;
+  z-index: 5;
+  transform: translateX(-100%);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.05s;
+  pointer-events: none;
 }
 
 .layerBeige {
@@ -163,7 +170,6 @@
   width: 280px;
   background-color: #FCFCF4;
   transform: translateX(-60px);
-  /* Start hidden under/behind the blue path */
   transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 2;
 }
@@ -294,6 +300,11 @@
 .row:hover .rowContentActiveWrapper,
 .row.active .rowContentActiveWrapper {
   clip-path: inset(0 0 0 0);
+}
+
+.row:hover .layerBlue,
+.row.active .layerBlue {
+  transform: translateX(0);
 }
 
 .row:hover .layerBeige,
