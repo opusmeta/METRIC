@@ -1,0 +1,24 @@
+.promoWrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.arrowLeft, .arrowRight {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: #FFFFFF;
+  opacity: 0;
+  z-index: 20000;
+  font-family: monospace;
+  pointer-events: none;
+}
